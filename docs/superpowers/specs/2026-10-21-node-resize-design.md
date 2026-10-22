@@ -24,7 +24,7 @@ ToonFlow 的无限画布（Vue Flow）中，节点目前没有任何调整大小
 
 - **触发**：悬停或选中任意节点时，右下角出现缩放手柄（小方块，沿用 `groupNode.vue` 现有手柄的视觉风格，随深色/浅色主题自适应）。
 - **拖动**：按住手柄拖动，节点宽、高各自独立变化（自由缩放）。
-- **边界**：最小尺寸 120×80（与分组节点一致）。
+- **边界**：最小宽度 120；最小高度为 `max(80, titleBar 高度 + cardHeight)`——`cardHeight` 是骨架既有 computed（≥100，随端口数增长），标题栏高度缩放开始时实测，保证拖矮后标题栏、卡片 chrome 与端口布局都完整（实现期两轮审查细化，比固定 80 更合理）。
 - **隐藏场景**：多选节点时隐藏手柄（显示条件统一为 `getSelectedNodes.length <= 1` 且节点处于 hover/selected/resizing 之一，比 groupNode 在"多选中悬停未选中节点"这一边缘场景更严格，取此规则为准）；框选开始或拖动节点期间隐藏（复用 `slotsHiddenByInteraction` 闩锁，框选后需点击节点才重新显示，与槽位显隐行为一致）；文档面板（document）模式下禁用（节点为占位符）；**readOnly 模式（如首页展示画布 `exploreProcess.vue`）下不渲染拖柄**（nodeSkeleton 所有控件均以 `!readOnly` 门控，拖柄沿用）；连接线进行中隐藏。
 - **连线**：拖动尺寸时，连到该节点的连线端点自动跟随（Vue Flow `ResizeObserver` → `updateNodeDimensions` 自动重算 `handleBounds`）。
 
